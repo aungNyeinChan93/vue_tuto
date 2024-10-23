@@ -58,7 +58,7 @@ import { reactive, ref } from 'vue';
     const hideStatus=()=>{
         if(!hideAction.value){
             tasks.value = tasks.value.filter((task)=>{
-                return task.status == false;
+                return !task.status ;
             });
         }
     }
