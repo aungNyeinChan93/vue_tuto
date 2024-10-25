@@ -21,14 +21,14 @@
                     </div>
                 </ul>
             </div>
-            <button class="btn btn-sm btn-danger my-2 " @click="hideStatus">Clear</button>
+            <button class="btn btn-sm btn-danger my-2 " @click="clear">Clear</button>
         </div>
     </section>
 </template>
 
 <script setup>
 
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 
     const hideAction = ref(false);
 
@@ -56,8 +56,18 @@ import { reactive, ref } from 'vue';
         task:null,
     });
 
-    const localData = (localStorage.getItem("localTasks"));
-    tasks.value = JSON.parse(localData);
+    // onBeforeUnmount(()=>{
+    //     if(localStorage.getItem("localTasks")){
+    //         onMounted();
+    //     }
+    // });
+
+    onMounted(()=>{
+       if(localStorage.getItem("localTasks")){
+        const localData = (localStorage.getItem("localTasks"));
+        tasks.value = JSON.parse(localData);
+       }
+    });
    
     const addTask = (e)=>{
         console.log(e.target.image.value);
@@ -68,20 +78,20 @@ import { reactive, ref } from 'vue';
             }
             tasks.value.push(data);
             localStorage.setItem("localTasks",JSON.stringify(tasks.value));
-            location.reload();
             form.task = "";
+            // location.reload();
         }else{
             alert("can't be null value!");
         }
     }
 
-  
 
-    const hideStatus=()=>{
+    const clear=()=>{
         if(!hideAction.value){
             tasks.value = tasks.value.filter((task)=>{
-                return !task.status ;
-            });
+                return task.status === false
+            })
+            localStorage.setItem("localTasks",JSON.stringify(tasks.value))   
         }
     }
 
