@@ -9,6 +9,7 @@
                     <input type="checkbox" name="check_status" id="check_status" v-model="checkStatus" class="mx-2">
                     <input type="file" name="image" id="" @change="change" disabled>
                     <img :src="imagePreview" class=" img-fluid w-25" alt="" >
+                    <input type="checkbox" name="view" id="view" v-model="view" @change="view_hide"><span class="mx-2">Hide </span>
                 </div>
             </form>
 
@@ -35,6 +36,8 @@ import { onMounted, reactive, ref } from 'vue';
     const checkStatus = ref(false);
 
     const imagePreview = ref();
+
+    const view = ref(false);
 
 
     const tasks= ref([
@@ -85,11 +88,10 @@ import { onMounted, reactive, ref } from 'vue';
         }
     }
 
-
     const clear=()=>{
         if(!hideAction.value){
             tasks.value = tasks.value.filter((task)=>{
-                return task.status === false
+                return !task.status
             })
             localStorage.setItem("localTasks",JSON.stringify(tasks.value))   
         }
@@ -99,6 +101,11 @@ import { onMounted, reactive, ref } from 'vue';
         console.log(e.target.files[0].name);
         imagePreview.value = URL.createObjectURL(e.target.files[0]);
     }
+
+    const view_hide = ()=>{
+        tasks.value = view.value ? tasks.value.filter(task=>!task.status) : tasks.value;
+    }
+
 
 </script>
 
